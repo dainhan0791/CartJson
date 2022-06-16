@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta title="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cart</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .card {
+        width: 11rem;
+      }
+      .card > img {
+        height: 170px;
+        object-fit: cover;
+      }
+      .nav-item {
+        cursor: pointer;
+      }
+      .table > thead > tr > th {
+        text-align: center;
+        width: 80px;
+      }
+      #carts > tr > td {
+        width: 80px;
+        height: 90px;
+        line-height: 90px;
+        text-align: center;
+      }
+      .cart-img {
+        object-fit: contain;
+        width: 100%;
+        height: 100%;
+      }
+
+      .cart-buy {
+        /* margin-right: auto; */
+      }
+      .cart-total {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-right: 40px;
+      }
+      .cart-shipping {
+        font-size: 1.5rem;
+        margin-right: 80px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container-fuild">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+          <a class="navbar-brand" href="#">Navbar</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  <i class="fa-solid fa-cart-shopping cart-icon" data-bs-toggle="modal" data-bs-target="#myModal"></i>
+                  <span class="text-danger">0</span>
+                  <!-- The Modal -->
+
+                  <div class="modal" id="myModal">
+                    <div class="modal-dialog modal-xl">
+                      <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                          <h4 class="modal-title">Cart</h4>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Price</th>
+                                <th></th>
+                                <th>Quantity</th>
+                                <th></th>
+                                <th>Shipping</th>
+                                <th>Total</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody id="carts"></tbody>
+                          </table>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                          <p class="text-black cart-shipping"></p>
+                          <p class="text-info cart-total"></p>
+                          <button type="button" class="btn btn-warning" id="cart-clear">Clear</button>
+                          <button type="button" class="btn btn-success" id="cart-buy">Buy</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            </ul>
+            <form class="d-flex">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+      </nav>
+
+      <div class="container mt-3">
+        <div class="row" id="products"></div>
+      </div>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    const products = [
+      { img: './images/1.jpg', title: 'Nhat', price: 1, quantity: 1 },
+      { img: './images/2.jpg', title: 'Thu', price: 2, quantity: 1 },
+      { img: './images/3.jpg', title: 'Hoa', price: 3, quantity: 1 },
+      { img: './images/4.jpg', title: 'Lan', price: 4, quantity: 1 },
+      { img: './images/5.jpg', title: 'An', price: 5, quantity: 1 },
+      { img: './images/6.jpg', title: 'Tu', price: 6, quantity: 1 },
+      { img: './images/7.jpg', title: 'Ngoc', price: 7, quantity: 1 },
+      { img: './images/8.jpg', title: 'Nhi', price: 8, quantity: 1 },
+      { img: './images/9.jpg', title: 'Thuy', price: 9, quantity: 1 },
+      { img: './images/10.jpg', title: 'Vy', price: 10, quantity: 1 },
+    ];
+
+    function render() {
+      const html = products
+        .map(
+          (item) => `
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2 col-2">
+                <div class="card mt-3">
+                    <img src="${item.img}" class="card-img-top img-fluid" alt="...">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-dark">${item.title}</h5>
+                        <p class="card-text text-secondary">${item.price} $</p>
+                        <a href="#" class="btn btn-info px-2">View</a>
+                        <a href="#" class="btn btn-success px-2 product-btn-buy">Buy</a>
+                    </div>
+                 </div>
+            </div>
+         `,
+        )
+        .join('');
+      $('#products').html(html);
+
+      $('.product-btn-buy').each((index, value) => {
+        // console.log(index,value)
+        $(value).click(() => {
+          addToCart(index);
+        });
+      });
+
+      const localStorageProducts = localStorage.getItem('products');
+      const Carts = JSON.parse(localStorageProducts);
+      const cart = Carts.map(
+        (item) => `
+        <tr>
+            <td>
+                <img src="${item.img}" alt="" class="cart-img"/>
+            </td>
+            <td>
+                <hp class="cart-title">${item.title}</hp>
+            </td>
+            <td>
+                <p class="cart-price">${item.price}</p>
+            </td>
+            <td>
+                <button class="btn btn-primary cart-decrement">-</button>
+            </td>
+            <td>
+                <p class="cart-quantity">${item.quantity}</p>
+            </td>
+            <td>
+                <button class="btn btn-primary cart-increment">+</button>
+            </td>
+            <td>
+            </td>
+            <td>
+            </td>
+            <td>
+                <button class="btn btn-danger cart-remove">X</button>
+            </td>
+        </tr>
+
+
+
+        `,
+      );
+      let SHIPPING = 0;
+      let subTotal = 0;
+      Carts.forEach((item) => {
+        subTotal += item.price * item.quantity;
+      });
+      const total = subTotal + SHIPPING;
+      //handle
+      $('#carts').html(cart);
+
+      if (Carts.length > 0) {
+        SHIPPING = 2;
+        $('.cart-shipping').text(SHIPPING.toFixed(1));
+      } else {
+        $('.cart-shipping').text(0);
+      }
+      $('.cart-total').text(total.toFixed(1));
+
+      // Table btn
+      $('#cart-clear').click(function () {
+        removeAll();
+      });
+
+      $('#cart-buy').click(() => {
+        alert('Buy Success');
+      });
+      // Carts button
+      $('.cart-remove').each(function (index, item) {
+        $(item).click(() => {
+          removeCart(index);
+        });
+      });
+
+      $('.cart-decrement').each(function (index, item) {
+        $(item).click(() => {
+          updateQuantity(index, Carts[index].quantity - 1);
+        });
+      });
+      $('.cart-increment').each(function (index, item) {
+        $(item).click(() => {
+          updateQuantity(index, Carts[index].quantity + 1);
+        });
+      });
+    }
+
+    const carts = [];
+    function addToCart(id) {
+      let img = products[id].img;
+      let title = products[id].title;
+      let price = products[id].price;
+      let quantity = products[id].quantity;
+
+      console.log();
+      carts.push({
+        img: img,
+        title: title,
+        price: price,
+        quantity: quantity,
+      });
+      localStorage.setItem('products', JSON.stringify(carts));
+
+      render();
+    }
+
+    function removeCart(index) {
+      const localStorageProducts = localStorage.getItem('products');
+      const Carts = JSON.parse(localStorageProducts);
+
+      Carts.splice(index, 1);
+
+      localStorage.setItem('products', JSON.stringify(Carts));
+      render();
+    }
+    function removeAll() {
+      const localStorageProducts = localStorage.getItem('products');
+      const Carts = JSON.parse(localStorageProducts);
+
+      Carts.splice(0);
+      localStorage.setItem('products', JSON.stringify(Carts));
+
+      render();
+    }
+    function updateQuantity(index, quantity) {
+      if (quantity < 1) {
+        removeCart(index);
+        return;
+      }
+      const localStorageProducts = localStorage.getItem('products');
+      const Carts = JSON.parse(localStorageProducts);
+      Carts[index].quantity = quantity;
+      localStorage.setItem('products', JSON.stringify(Carts));
+
+      render();
+    }
+    render();
+  </script>
+</html>

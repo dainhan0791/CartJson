@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <h2>Danh Sach ORDER</h2>
+        <table>
+          <thead>
+            <tr>
+              <th class="">name</th>
+              <th class="">price</th>
+              <th class="">quantity</th>
+              <th>
+                <button id="btn-add">Add Items</button>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="order-items">
+            <tr>
+              <th class="sub-total"></th>
+              <th class="shipping"></th>
+              <th class="total"></th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <h2>Price</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="">Subtotal</th>
+              <th class="">Shipping</th>
+              <th class="">Total</th>
+              <th class="">Button</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th class="sub-total"></th>
+              <th class="shipping"></th>
+              <th class="total"></th>
+              <th>
+                <button id="buy">Buy</button>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <script>
+    const items = [
+      // {name: 'Pizza 001', price: 5.9, quantity: 1},
+      // {name: 'Pizza 002', price: 6.9, quantity: 1},
+      // {name: 'Pizza 003', price: 7.9, quantity: 1},
+    ];
+    const SHIPPING = 2;
+
+    function render() {
+      let subTotal = 0;
+      items.forEach((item) => {
+        subTotal += item.quantity * item.price;
+      });
+      const total = subTotal + SHIPPING;
+
+      const html = items
+        .map(
+          (item) => `
+        <tr>
+            <th>${item.name}</th>
+            <th>${item.price}</th>
+            <th>${item.quantity}</th>
+            <th >
+                <button class="btn-del">x</button>
+            </th>
+            <th >
+                <button class="btn-decrement">-</button>
+            </th>
+            <th >
+                <button class="btn-increment">+</button>
+            </th>
+        <tr>
+    `,
+        )
+        .join(' ');
+      $('#order-items').html(html);
+
+      $('.btn-del').each(function (index, value) {
+        $(value).click(function () {
+          remove(index);
+        });
+      });
+
+      $('.btn-decrement').each(function (index, value) {
+        $(value).click(function () {
+          updateQuatity(index, items[index].quantity - 1);
+        });
+      });
+
+      $('.btn-increment').each(function (index, value) {
+        $(value).click(function () {
+          updateQuatity(index, items[index].quantity + 1);
+        });
+      });
+
+      $('.sub-total').text(subTotal.toFixed(2));
+      $('.shipping').text(SHIPPING);
+      $('.total').text(total.toFixed(2));
+    }
+    // render()
+    function add() {
+      items.push({
+        name: `Pizza ${Math.random().toFixed(2)}`,
+        quantity: 1,
+        price: (Math.random() * 10).toFixed(2),
+      });
+      render();
+    }
+    function remove(index) {
+      items.splice(index, 1);
+      render();
+    }
+    function updateQuatity(index, quantity) {
+      if (quantity < 1) {
+        remove(index);
+        return;
+      }
+      items[index].quantity = quantity;
+      render();
+    }
+    $('#btn-add').click(() => {
+      add();
+    });
+    $('#buy').click(() => {
+      alert('Mua thanh cong!');
+    });
+  </script>
+</html>
